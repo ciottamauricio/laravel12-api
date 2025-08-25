@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Pessoa;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\AuthController;
 
@@ -15,6 +14,10 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('me', [AuthController::class, 'me']);
+});
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'API funcionando!', 'timestamp' => now()]);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+
 
 class AuthController extends Controller
 {
@@ -62,7 +64,12 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        try {
+            $newToken = JWTAuth::refresh(JWTAuth::getToken());
+            return $this->createNewToken($newToken);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Token cannot be refreshed'], 401);
+        }
     }
 
     protected function respondWithToken($token)
@@ -70,7 +77,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => auth('api')->user()
         ]);
     }

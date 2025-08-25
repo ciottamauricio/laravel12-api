@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Cosumer;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Receipt;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

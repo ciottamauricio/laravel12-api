@@ -4,31 +4,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductController;
 
-Route::group([
-    'middleware' => 'api',
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::get('me', [AuthController::class, 'me']);
-});
+// Public routes
+Route::post('auth/login', [AuthController::class, 'login']);
+Route::post('auth/register', [AuthController::class, 'register']);
 
 Route::get('/test', function () {
-    return response()->json(['message' => 'API funcionando!', 'timestamp' => now()]);
+    return response()->json(['message' => 'API Working!', 'timestamp' => now()]);
 });
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// Suas rotas de API aqui:
-//Route::apiResource('seus-recursos', Pessoa::class);
-
-Route::apiResource('customers', CustomerController::class);
-
-//Route::middleware('auth:api')->group(function () {
+// Protected routes
+Route::middleware('auth:api')->group(function () {
+    // Auth protected routes
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::post('auth/refresh', [AuthController::class, 'refresh']);
+    Route::get('auth/me', [AuthController::class, 'me']);
     
-//});
+    // Customer CRUD
+    Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('products', ProductController::class);
+    
+    // User info
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});

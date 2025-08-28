@@ -3,26 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Customer Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900">
-<header class="bg-white shadow-md py-4">
-    <div class="container mx-auto flex justify-between items-center px-6">
-        <a href="{{ route('home') }}"><h1 class="text-xl font-bold">Brand</h1></a>
-        <nav>
-            <ul class="flex space-x-6">
-                <li><a href="{{ route('about') }}" class="hover:text-blue-500">About Us</a></li>
-                <li><a href="{{ route('contact') }}" class="hover:text-blue-500">Contact</a></li>
-            </ul>
-        </nav>
+<body>
+    <div class="container mt-4">
+        @yield('content')
     </div>
-</header>
-<main class="container mx-auto mt-10 px-6 text-center">
-    @yield('content')
-</main>
-<footer class="mt-10 py-6 bg-white text-center shadow-md">
-    <p class="text-gray-600">&copy; 2025 Brand. All rights reserved.</p>
-</footer>
 </body>
 </html>

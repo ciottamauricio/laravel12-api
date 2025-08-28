@@ -3,14 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\Web\CustomerController;
+use App\Http\Controllers\Web\AuthController;
 
-Route::get('/', [HomeController::class, 'index'])
-    ->name('home');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('posts/{post}', [PostController::class, 'show'])
-    ->name('post.show');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::view('contact', 'contact')->name('contact');
-Route::view('about', 'about')->name('about');
-
-Route::view('/second', 'second');
+// Protected customer routes
+Route::middleware('web.auth')->group(function () {
+    Route::resource('customers', CustomerController::class);
+});

@@ -1,0 +1,39 @@
+extend type Query {
+    customers: [Customer!]! @guard @all
+    customer(id: ID! @eq): Customer @guard @find
+    customerByEmail(email: String! @eq): Customer @guard @find
+}
+
+extend type Mutation {
+    createCustomer(input: CreateCustomerInput! @spread): Customer! @guard @create
+    updateCustomer(input: UpdateCustomerInput! @spread): Customer! @guard @update
+    deleteCustomer(id: ID! @eq): Customer @guard @delete
+}
+
+type Customer {
+    id: ID!
+    customer_name: String!
+    email: String!
+    phone: String
+    tax_id: String
+    address: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input CreateCustomerInput {
+    customer_name: String! @rules(apply: ["required", "string", "max:255"])
+    email: String! @rules(apply: ["required", "email", "unique:customer,email"])
+    phone: String @rules(apply: ["nullable", "string", "max:20"])
+    tax_id: String @rules(apply: ["nullable", "string", "max:50"])
+    address: String @rules(apply: ["nullable", "string", "max:500"])
+}
+
+input UpdateCustomerInput {
+    id: ID!
+    customer_name: String @rules(apply: ["sometimes", "string", "max:255"])
+    email: String @rules(apply: ["sometimes", "email", "unique:customer,email,{args.id}"])
+    phone: String @rules(apply: ["nullable", "string", "max:20"])
+    tax_id: String @rules(apply: ["nullable", "string", "max:50"])
+    address: String @rules(apply: ["nullable", "string", "max:500"])
+}

@@ -1,0 +1,39 @@
+extend type Query {
+    products: [Product!]! @guard @all
+    product(id: ID! @eq): Product @guard @find
+    productsByName(product_name: String! @where(operator: "like")): [Product!]! @guard @all
+}
+
+extend type Mutation {
+    createProduct(input: CreateProductInput! @spread): Product! @guard @create
+    updateProduct(input: UpdateProductInput! @spread): Product! @guard @update
+    deleteProduct(id: ID! @eq): Product @guard @delete
+}
+
+type Product {
+    id: ID!
+    product_name: String!
+    description: String
+    unit_price: Float!
+    tax_rate: Float!
+    currency_code: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input CreateProductInput {
+    product_name: String! @rules(apply: ["required", "string", "max:255"])
+    description: String @rules(apply: ["nullable", "string", "max:1000"])
+    unit_price: Float! @rules(apply: ["required", "numeric", "min:0"])
+    tax_rate: Float! @rules(apply: ["required", "numeric", "min:0", "max:1"])
+    currency_code: String! @rules(apply: ["required", "string", "size:3"])
+}
+
+input UpdateProductInput {
+    id: ID!
+    product_name: String @rules(apply: ["sometimes", "string", "max:255"])
+    description: String @rules(apply: ["nullable", "string", "max:1000"])
+    unit_price: Float @rules(apply: ["sometimes", "numeric", "min:0"])
+    tax_rate: Float @rules(apply: ["sometimes", "numeric", "min:0", "max:1"])
+    currency_code: String @rules(apply: ["sometimes", "string", "size:3"])
+}

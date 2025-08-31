@@ -1,0 +1,51 @@
+extend type Query {
+    receipts: [Receipt!]! @guard @all
+    receipt(id: ID! @eq): Receipt @guard @find
+    receiptsByNumber(receipt_number: String! @where(operator: "like")): [Receipt!]! @guard @all
+    receiptsByCustomer(customer_id: ID! @eq): [Receipt!]! @guard @all
+    receiptsByStatus(status: String! @eq): [Receipt!]! @guard @all
+}
+
+extend type Mutation {
+    createReceipt(input: CreateReceiptInput! @spread): Receipt! @guard @create
+    updateReceipt(input: UpdateReceiptInput! @spread): Receipt! @guard @update
+    deleteReceipt(id: ID! @eq): Receipt @guard @delete
+}
+
+type Receipt {
+    id: ID!
+    receipt_number: String!
+    issue_date: String!
+    due_date: String
+    total_amount: Float!
+    tax_amount: Float!
+    currency_code: String!
+    status: String!
+    customer_id: ID!
+    customer: Customer! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+input CreateReceiptInput {
+    receipt_number: String! @rules(apply: ["required", "string", "max:255"])
+    issue_date: String! @rules(apply: ["required", "date"])
+    due_date: String @rules(apply: ["nullable", "date"])
+    total_amount: Float! @rules(apply: ["required", "numeric", "min:0"])
+    tax_amount: Float! @rules(apply: ["required", "numeric", "min:0"])
+    currency_code: String! @rules(apply: ["required", "string", "size:3"])
+    status: String! @rules(apply: ["required", "string", "max:50"])
+    customer_id: ID! @rules(apply: ["required", "exists:customers,id"])
+}
+
+input UpdateReceiptInput {
+    id: ID!
+    receipt_number: String @rules(apply: ["sometimes", "string", "max:255"])
+    issue_date: String @rules(apply: ["sometimes", "date"])
+    due_date: String @rules(apply: ["nullable", "date"])
+    total_amount: Float @rules(apply: ["sometimes", "numeric", "min:0"])
+    tax_amount: Float @rules(apply: ["sometimes", "numeric", "min:0"])
+    currency_code: String @rules(apply: ["sometimes", "string", "size:3"])
+    status: String @rules(apply: ["sometimes", "string", "max:50"])
+    customer_id: ID @rules(apply: ["sometimes", "exists:customers,id"])
+}

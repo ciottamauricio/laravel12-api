@@ -23,8 +23,21 @@ type Receipt {
     status: String!
     customer_id: ID!
     customer: Customer! @belongsTo
+    products: [Product!]! @belongsToMany
+    receiptProducts: [ReceiptProduct!]! @hasMany
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+type ReceiptProduct {
+    id: ID!
+    receipt_id: ID!
+    product_id: ID!
+    quantity: Int!
+    unit_price: Float!
+    total_price: Float!
+    receipt: Receipt! @belongsTo
+    product: Product! @belongsTo
 }
 
 input CreateReceiptInput {

@@ -68,4 +68,9 @@ class Receipt extends Model
 
         return "RCP-{$year}-{$newNumber}";
     }
+
+    public function receiptProducts()
+    {
+        return $this->hasMany(ReceiptProduct::class);
+    }
 }

@@ -111,7 +111,14 @@ The application includes:
 - **`POST /graphql`** - GraphQL endpoint
 - **`GET /graphiql`** - GraphQL playground (development only)
 
-📖 Documentation
+### Postman Collection
+A complete Postman collection with all API endpoints is available in the project root:
+
+📁 **`laravel12-api.postman_collection.json`**
+
+
+## 📖 Documentation
+
 Complete API documentation will be available soon!
 
 ## 📚 Key Learning Outcomes
